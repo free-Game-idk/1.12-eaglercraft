@@ -1,0 +1,56 @@
+plugins {
+    id 'fabric-loom' version '1.4.+'
+    id 'maven-publish'
+}
+
+version = project.mod_version
+group = project.maven_group
+
+repositories {
+    mavenCentral()
+    maven { url = 'https://api.modrinth.com/maven' }
+    maven { url = 'https://maven.fabricmc.net/' }
+    maven { url = 'https://maven.minecraftforge.net' }
+}
+
+dependencies {
+    minecraft "com.mojang:minecraft:${project.minecraft_version}"
+    mappings loom.officialMojangMappings()
+    modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
+    modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
+}
+
+processResources {
+    inputs.property "version", project.version
+    inputs.property "group", project.group
+    
+    filteringCharacterEncoding = "UTF-8"
+    
+    filesMatching("fabric.mod.json") {
+        expand "version": project.version,
+               "group": project.group
+    }
+}
+
+tasks.withType(JavaCompile).configureEach {
+    it.options.release = 21
+}
+
+java {
+    withSourcesJar()
+}
+
+jar {
+    from("LICENSE") {
+        rename it, "${it}_${project.archivesBaseName}"
+    }
+}
+
+publishingTask = tasks.register('publishToMavenLocal', Upload) {
+    configuration = configurations.archives
+    repositories {
+        mavenDeployer {
+            repository(url: "file://${System.properties['user.home']}/.m2/repository")
+        }
+    }
+}
