@@ -4,10 +4,17 @@ import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
+import com.pvphud.PvPHudMod;
 
 public class PvPHudClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
+        PvPHudMod.LOGGER.info("PvP HUD Client 已初始化");
+        
+        // 注册按键绑定
+        KeyBindings.register();
+        
+        // 注册 HUD 渲染回调
         HudRenderCallback.EVENT.register(this::onHudRender);
     }
 

@@ -7,6 +7,7 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.hit.HitResult;
+import com.pvphud.config.HudConfig;
 import org.lwjgl.glfw.GLFW;
 
 public class PvPHudRenderer {
@@ -18,6 +19,9 @@ public class PvPHudRenderer {
      * 绘制生命值条
      */
     public static void renderHealthBar(DrawContext drawContext, PlayerEntity player, int x, int y) {
+        HudConfig config = HudConfig.getInstance();
+        if (!config.showHealthBar) return;
+        
         float health = player.getHealth();
         float maxHealth = player.getMaxHealth();
         float healthPercent = health / maxHealth;
@@ -45,6 +49,9 @@ public class PvPHudRenderer {
      * 绘制护甲条
      */
     public static void renderArmorBar(DrawContext drawContext, PlayerEntity player, int x, int y) {
+        HudConfig config = HudConfig.getInstance();
+        if (!config.showArmorBar) return;
+        
         int armor = player.getArmor();
         int maxArmor = 20;
         float armorPercent = (float) armor / maxArmor;
@@ -71,6 +78,9 @@ public class PvPHudRenderer {
      * 绘制饥饿条
      */
     public static void renderHungerBar(DrawContext drawContext, PlayerEntity player, int x, int y) {
+        HudConfig config = HudConfig.getInstance();
+        if (!config.showHungerBar) return;
+        
         int hunger = player.getHungerManager().getFoodLevel();
         int maxHunger = 20;
         float hungerPercent = (float) hunger / maxHunger;
@@ -97,6 +107,9 @@ public class PvPHudRenderer {
      * 绘制目标信息（准星指向的实体）
      */
     public static void renderTargetInfo(DrawContext drawContext, MinecraftClient client, int screenWidth, int screenHeight) {
+        HudConfig config = HudConfig.getInstance();
+        if (!config.showTargetInfo) return;
+        
         if (client.crosshairTarget == null || client.crosshairTarget.getType() != HitResult.Type.ENTITY) {
             return;
         }
