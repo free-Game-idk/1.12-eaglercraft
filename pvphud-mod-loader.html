@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Eaglercraft PvP HUD 模组加载器</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            background-color: #1a1a1a;
+            color: #00FF00;
+            font-family: Arial, sans-serif;
+        }
+        
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #000;
+            border: 2px solid #00FF00;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 0 20px rgba(0, 255, 0, 0.3);
+        }
+        
+        h1 {
+            text-align: center;
+            color: #00FF00;
+            margin-top: 0;
+        }
+        
+        .info {
+            background-color: #111;
+            border-left: 3px solid #00FF00;
+            padding: 10px;
+            margin: 10px 0;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+        
+        .button {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            background-color: #00FF00;
+            color: #000;
+            border: none;
+            border-radius: 5px;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 16px;
+            transition: 0.3s;
+        }
+        
+        .button:hover {
+            background-color: #00CC00;
+            box-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
+        }
+        
+        .warning {
+            background-color: #331111;
+            border-left: 3px solid #FF0000;
+            padding: 10px;
+            margin: 10px 0;
+            color: #FF6666;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>PvP HUD 模组加载器</h1>
+        
+        <div class="info">
+            <strong>模组功能：</strong><br>
+            • 按 Shift 打开菜单<br>
+            • 实时显示生命值、护甲、饥饿度<br>
+            • 显示目标玩家信息<br>
+            • 自定义 HUD 显示项目
+        </div>
+        
+        <div class="info">
+            <strong>使用方法：</strong><br>
+            1. 点击下方"加载模组"按钮<br>
+            2. 在游戏中按 Shift 打开菜单<br>
+            3. 选择要启用的功能<br>
+            4. 点击保存即可生效
+        </div>
+        
+        <button class="button" onclick="loadMod()">🚀 加载模组到游戏</button>
+        <button class="button" onclick="resetSettings()">🔄 重置设置</button>
+        
+        <div class="warning">
+            ⚠️ 注意：该模组仅在 Eaglercraft 浏览器窗口中有效。关闭窗口后需要重新加载。
+        </div>
+        
+        <div id="status" style="text-align: center; margin-top: 20px; color: #888;"></div>
+    </div>
+    
+    <script>
+        function loadMod() {
+            const statusEl = document.getElementById('status');
+            
+            // 动态加载模组脚本
+            fetch('pvphud-mod.js')
+                .then(response => response.text())
+                .then(code => {
+                    // 在当前窗口加载模组
+                    eval(code);
+                    statusEl.innerHTML = '✅ 模组已加载！';
+                    statusEl.style.color = '#00FF00';
+                })
+                .catch(error => {
+                    statusEl.innerHTML = '❌ 加载失败：' + error.message;
+                    statusEl.style.color = '#FF0000';
+                    console.error(error);
+                });
+        }
+        
+        function resetSettings() {
+            localStorage.removeItem('pvphud_enabled');
+            localStorage.removeItem('pvphud_health');
+            localStorage.removeItem('pvphud_armor');
+            localStorage.removeItem('pvphud_hunger');
+            localStorage.removeItem('pvphud_target');
+            
+            const statusEl = document.getElementById('status');
+            statusEl.innerHTML = '✅ 设置已重置！';
+            statusEl.style.color = '#00FF00';
+        }
+        
+        // 页面加载时显示当前状态
+        window.addEventListener('load', function() {
+            const statusEl = document.getElementById('status');
+            const enabled = localStorage.getItem('pvphud_enabled') !== 'false';
+            statusEl.innerHTML = enabled ? '📡 模组状态：已启用' : '📡 模组状态：已禁用';
+        });
+    </script>
+</body>
+</html>
